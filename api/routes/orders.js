@@ -8,6 +8,7 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     Order.find()
     .select('product quantity _id')
+    .populate('product', 'name')
     .exec()
     .then(docs => {
         res.status(200).json({
@@ -21,9 +22,8 @@ router.get('/', (req, res, next) => {
                         type: 'GET',
                         url: 'http://localhost:3000/orders/' + doc._id
                     }
-                }
-            }),
-            
+                };
+            })
         });
     })
     .catch(err => {
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
         res.status(500).json({
             error: err
         });
-    })
+    });
 });
 
 router.post('/', (req, res, next) => {
@@ -44,18 +44,15 @@ router.post('/', (req, res, next) => {
         }
         const order = new Order({
             _id: mongoose.Types.ObjectId(),
-            productId: req.body.productId,
+            product: req.body.productId,
             quantity: req.body.quantity
         });
-        return order.save();
-    })
-    .then(result => {
-        console.log(result);
+        console.log(product);
         res.status(201).json({
             message: 'order stored',
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/orders/' + result._id
+                url: 'http://localhost:3000/orders/' + product._id
             }
         });
     })
@@ -64,11 +61,12 @@ router.post('/', (req, res, next) => {
         res.status(500).json({
             error: err
         });
-    })
+    });
 });
 
 router.get('/:orderId', (req, res, next) => {
     Order.findById(req.params.orderId)
+    .populate('product')
     .exec()
     .then(order => {
         if(!order) {
@@ -88,7 +86,7 @@ router.get('/:orderId', (req, res, next) => {
         res.status(500).json({
             error: err
         });
-    })
+    });
 });
 
 router.delete('/:orderId', (req, res, next) => {
@@ -103,7 +101,7 @@ router.delete('/:orderId', (req, res, next) => {
         res.status(500).json({
             error: err
         });
-    })
+    });
 });
 
 module.exports = router;
