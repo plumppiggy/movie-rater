@@ -16,6 +16,12 @@ const mainNav = props => (
     					{context.token && <li>
 							<NavLink to="/auth">Auth</NavLink>
 						</li>}
+						{context.token && (
+							// React fragment
+							<li>
+								<button onClick={context.logout}>Logout</button>
+							</li>
+						)}
     				</ul>
     			</nav>
    				</header>
