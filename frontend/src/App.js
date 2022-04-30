@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Routes, Link, Navigate} from 'react-router-dom';
 
 import MainNav from './components/navigation/mainnav';
 import Auth from './pages/auth';
+import Movies from './pages/movies';
 import AuthContext from './context/auth-context';
 
 class App extends Component {
@@ -32,10 +33,8 @@ class App extends Component {
       <MainNav />
       <main className='main-content'>
       <Routes>
-        <Route path="/" element={<Navigate replace to="/auth" />}>
-          
-        </Route>
-        
+        {this.state.token && <Route path="/" element={<Navigate replace to="/movies" />}></Route>}
+        <Route path="/movies" element={<Movies />} />
         <Route path="/auth" element={<Auth />} />
         </Routes>
       </main>
