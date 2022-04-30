@@ -28,7 +28,11 @@ exports.userSignIn = (req, res, next) => {
                     .then(result => {
                         console.log(result);
                         res.status(201).json({
-                            message: 'user created'
+                            message: 'user created',
+                            user: {
+                                id: user._id,
+                                email: user.email
+                            }
                         });
                     })
                     .catch(err => {
@@ -71,7 +75,8 @@ exports.userLoginIn = (req, res, next) => {
                 )
                 return res.status(200).json({
                     message: 'auth sucessful',
-                    token: token
+                    token: token,
+                    userId: user[0]._id
                 });
             }
             res.status(401).json({
