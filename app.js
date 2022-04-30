@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 
-const productRoutes = require('./api/routes/products');
+const movieRoutes = require('./api/routes/movies');
 const orderRoutes = require('./api/routes/orders');
 const userRoutes = require('./api/routes/user');
 
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 // handles requests
-app.use('/products', productRoutes);
+app.use('/movies', movieRoutes);
 app.use('/orders', orderRoutes);
 app.use('/user', userRoutes);
 

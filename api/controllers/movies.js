@@ -1,22 +1,22 @@
-const Product = require('../models/product');
+const Movie = require('../models/movie');
 const mongoose = require('mongoose');
 
-exports.productsGetAll = (req, res, next) => {
-    Product.find()
-    .select('name price _id productImage')
+exports.moviesGetAll = (req, res, next) => {
+    Movie.find()
+    .select('name rating _id coverImage')
     .exec()
     .then(docs => {
         const response = {
             count: docs.length,
-            products: docs.map(doc => {
+            movies: docs.map(doc => {
                 return {
                     name: doc.name,
-                    price: doc.price,
+                    rating: doc.rating,
                     _id: doc._id,
-                    productImage: doc.productImage,
+                    coverImage: doc.coverImage,
                     request: {
                         type: 'GET',
-                        url: 'http://localhost:3000/products/' + doc._id
+                        url: 'http://localhost:3000/movies/' + doc._id
                     }
                 }
             })
@@ -31,26 +31,26 @@ exports.productsGetAll = (req, res, next) => {
     });
 }
 
-exports.productsCreate = (req, res, next) => {
-    const product = new Product({
+exports.moviesCreate = (req, res, next) => {
+    const movie = new Movie({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price,
-        productImage: req.file.path
+        rating: req.body.rating,
+        coverImage: req.file.path
     });
-    product
+    movie
     .save()
     .then(result => {
         console.log(result);
         res.status(201).json({
-            message: 'Created Product',
-            createdProduct: {
+            message: 'Created Movie',
+            createdMovie: {
                 name: result.name,
-                price: result.price,
+                rating: result.rating,
                 _id: result._id,
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/products/' + result._id
+                    url: 'http://localhost:3000/movies/' + result._id
                 }
             }
         });
@@ -61,19 +61,19 @@ exports.productsCreate = (req, res, next) => {
     });
 }
 
-exports.productsGetOne = (req, res, next) => {
-    const id = req.params.productId;
-    Product.findById(id)
-    .select('name price _id productImage')
+exports.moviesGetOne = (req, res, next) => {
+    const id = req.params.movieId;
+    Movie.findById(id)
+    .select('name rating _id coverImage')
     .exec()
     .then(doc => {
         console.log(doc);
         if (doc) {
             res.status(200).json({
-                product: doc,
+                movie: doc,
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3000/products/' + doc._id
+                    url: 'http://localhost:3000/movies/' + doc._id
                 }
             });
         } else {
@@ -88,21 +88,21 @@ exports.productsGetOne = (req, res, next) => {
     })
 }
 
-exports.productsUpdate = (req, res, next) => {
-    const id = req.params.productId;
+exports.moviesUpdate = (req, res, next) => {
+    const id = req.params.movieId;
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
-    Product.update({_id : id}, {$set: updateOps})
+    Movie.update({_id : id}, {$set: updateOps})
     .exec()
     .then(result => {
         console.log(result);
         res.status(200).json({
-            message: "product updated",
+            message: "movie updated",
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/products/' + result._id
+                url: 'http://localhost:3000/movies/' + result._id
             }
         });
     })
@@ -114,13 +114,13 @@ exports.productsUpdate = (req, res, next) => {
     });
 }
 
-exports.productsDelete = (req, res, next) => {
-    const id = req.params.productId;
-    Product.remove({_id: id})
+exports.moviesDelete = (req, res, next) => {
+    const id = req.params.movieId;
+    Movie.remove({_id: id})
     .exec()
     .then(result => {
         res.status(200).json({
-            message: 'product deleted'
+            message: 'movie deleted'
         });
     })
     .catch(err => {

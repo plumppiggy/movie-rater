@@ -1,5 +1,5 @@
 const Order = require('../models/order');
-const Product = require('../models/product');
+const Product = require('../models/movie');
 const mongoose = require('mongoose');
 
 exports.ordersGetAll = (req, res, next) => {

@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { update } = require('../models/product');
 const multer = require('multer');
 const checkAuth = require('../auth/check-auth');
-const ProductController = require('../controllers/products');
+const MovieController = require('../controllers/movies');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -30,17 +29,16 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const Product = require('../models/product');
 
-router.get('/', ProductController.productsGetAll);
+router.get('/', MovieController.moviesGetAll);
 
-// create new products
-router.post('/', checkAuth, upload.single('productImage'), ProductController.productsCreate);
+// create new movies
+router.post('/', checkAuth, upload.single('coverImage'), MovieController.moviesCreate);
 
-router.get('/:productId', ProductController.productsGetOne);
+router.get('/:movieId', MovieController.moviesGetOne);
 
-router.patch('/:productId', checkAuth, ProductController.productsUpdate);
+router.patch('/:movieId', checkAuth, MovieController.moviesUpdate);
 
-router.delete('/:productId', checkAuth, ProductController.productsDelete);
+router.delete('/:movieId', checkAuth, MovieController.moviesDelete);
 
 module.exports = router;

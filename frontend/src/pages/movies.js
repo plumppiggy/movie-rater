@@ -28,7 +28,9 @@ class MoviesPage extends Component {
             {this.state.creating && 
             <Modal title="Add Movie" 
             canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}>
-                <p>Modal Content</p>
+                <form>
+                    
+                </form>
             </Modal>}
             <div className='movies-control'>
             <button className='btn' onClick={this.startCreateEventHandler}>Create Movie</button>
