@@ -1,0 +1,22 @@
+.movie__list-item {
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 1rem;
+    background-color: azure;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.movie__list-item h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: rgb(38, 59, 78);
+
+}
+
+.movie__list-item h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: aqua;
+}

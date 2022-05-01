@@ -33,7 +33,7 @@ const upload = multer({
 router.get('/', MovieController.moviesGetAll);
 
 // create new movies
-router.post('/', checkAuth, upload.single('coverImage'), MovieController.moviesCreate);
+router.post('/', checkAuth, /*upload.single('coverImage'),*/ MovieController.moviesCreate);
 
 router.get('/:movieId', MovieController.moviesGetOne);
 

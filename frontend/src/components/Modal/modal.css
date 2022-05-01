@@ -1,10 +1,10 @@
 .modal {
-    width: 90%;
+    width: 40%;
     background-color: aliceblue;
     box-shadow: 0 2px 8px black;
     position: fixed;
-    top: 20vh;
-    left: 50vh;
+    top: 10vh;
+    left: 30%;
 }
 
 .modal__header {
@@ -30,9 +30,9 @@
 
 }
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
     .modal {
         width: 30rem;
         left: calc((100% - 50rem) / 2);
     }
-}
+} */
