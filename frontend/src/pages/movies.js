@@ -12,7 +12,9 @@ class MoviesPage extends Component {
 
     state = {
         creating: false,
-        movies: []
+        movies: [],
+        isLoading: false,
+        selectedMovie: null
     };
 
     static contextType = AuthContext;
@@ -70,8 +72,18 @@ class MoviesPage extends Component {
             return res.json();
         })
         .then(resData => {
-            this.fetchMovies();
             console.log(resData);
+            this.setState(prevState => {
+                const updatedMovies = [...prevState.movies];
+                updatedMovies.push({
+                    _id: resData._id,
+                    name: resData.name,
+                    creatorId: this.context.userId,
+                    rating: resData.rating
+                });
+                return {movies: updatedMovies};
+            });
+            
         })
         .catch(err => {
             console.log(err);
@@ -86,6 +98,7 @@ class MoviesPage extends Component {
     };
 
     fetchMovies () {
+        this.setState({isLoading: true});
         fetch('http://localhost:8000/movies/', {
             method: 'GET',
             headers: {
@@ -103,10 +116,21 @@ class MoviesPage extends Component {
             const movies = resData.movies;
             this.setState({movies: movies});
             console.log(movies);
+            this.setState({isLoading: false});
         })
         .catch(err => {
             console.log(err);
+            this.setState({isLoading: false});
         });
+    }
+
+    showDetailHandler = movieId => {
+        this.setState(prevState => {
+            const selectedMovie = prevState.movies.find(e => e._id === movieId);
+            console.log(selectedMovie);
+            return {selectedMovie : selectedMovie};
+        });
+
     }
 
     render () {
@@ -114,10 +138,11 @@ class MoviesPage extends Component {
         
         return (
         <React.Fragment>
-            {this.state.creating && <Backdrop />}
+            {(this.state.creating || this.state.selectedMovie )&& <Backdrop />}
             {this.state.creating && 
             <Modal title="Add Movie" 
-            canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}>
+            canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}
+            confirmText="Confirm">
                 <form>
                     <div className='form-control'>
                         <label htmlFor='name'>Name</label>
@@ -129,13 +154,26 @@ class MoviesPage extends Component {
                     </div>
                 </form>
             </Modal>}
+            {this.state.selectedMovie && 
+            <Modal title="Movie" 
+            canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}
+            confirmText="Holder">
+                <h1>{this.state.selectedMovie.name}</h1>
+            </Modal>}
             {this.context.token && (
             <div className='movies-control'>
             <button className='btn' onClick={this.startCreateEventHandler}>Create Movie</button>
             </div>)}
+            {this.state.isLoading ? 
+            <div className='spinner'>
+                <div className="lds-hourglass"></div>
+            </div>
+             : 
             <MovieList 
             movies={this.state.movies}
-            authUserId={this.context.userId}/>
+            authUserId={this.context.userId}
+            onViewDetail={this.showDetailHandler}/>}
+            
             
         </React.Fragment>
         

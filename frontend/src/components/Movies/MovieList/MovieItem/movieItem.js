@@ -9,7 +9,7 @@ const movieItem = props => (
 
             </div>
             <div>
-                <button className="btn">View Details</button>
+                <button className="btn" onClick={props.onDetail.bind(this, props.movieId)}>View Details</button>
                 {props.userId === props.creatorId && <button className="btn">Edit Rating</button>}
             </div>
             </li>

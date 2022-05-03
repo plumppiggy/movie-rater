@@ -9,8 +9,10 @@ const movieList = props => {
             key={movie._id} 
             movieId={movie._id} 
             name={movie.name}
+            rating={movie.rating}
             userId={props.authUserId}
-            creatorId={movie.creatorId} />
+            creatorId={movie.creatorId}
+            onDetail={props.onViewDetail} />
         );
     });
 
