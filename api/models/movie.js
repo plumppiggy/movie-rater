@@ -4,7 +4,8 @@ const movieSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type : String, required : true},
     rating: { type : Number, required : true},
-    creatorId: {type : mongoose.Schema.Types.ObjectId, ref: 'User'}
+    creatorId: {type : mongoose.Schema.Types.ObjectId, ref: 'User'},
+    description: { type : String, required: true}
     //coverImage: {type: String, required: false}
 });
 

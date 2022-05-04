@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 exports.moviesGetAll = (req, res, next) => {
     Movie.find()
-    .select('name creatorId rating _id coverImage')
+    .select('name creatorId rating _id description coverImage')
     .exec()
     .then(docs => {
         const response = {
@@ -15,6 +15,7 @@ exports.moviesGetAll = (req, res, next) => {
                     rating: doc.rating,
                     _id: doc._id,
                     creatorId: doc.creatorId,
+                    description: doc.description,
                     //coverImage: doc.coverImage,
                     request: {
                         type: 'GET',
@@ -38,7 +39,8 @@ exports.moviesCreate = (req, res, next) => {
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         rating: req.body.rating,
-        creatorId: req.body.userId
+        creatorId: req.body.userId,
+        description: req.body.description
         //coverImage: req.file.path
     });
     movie
@@ -52,6 +54,7 @@ exports.moviesCreate = (req, res, next) => {
                 rating: result.rating,
                 _id: result._id,
                 creatorId: result.creatorId,
+                description: result.description,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/movies/' + result._id
@@ -68,7 +71,7 @@ exports.moviesCreate = (req, res, next) => {
 exports.moviesGetOne = (req, res, next) => {
     const id = req.params.movieId;
     Movie.findById(id)
-    .select('name rating _id coverImage')
+    .select('name rating _id description coverImage')
     .exec()
     .then(doc => {
         console.log(doc);

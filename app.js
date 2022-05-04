@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 
 const movieRoutes = require('./api/routes/movies');
-const orderRoutes = require('./api/routes/orders');
+const watchlistRoutes = require('./api/routes/watchlist');
 const userRoutes = require('./api/routes/user');
 
 mongoose.connect(
@@ -39,12 +39,12 @@ app.use((req, res, next) => {
 
 // handles requests
 app.use('/movies', movieRoutes);
-app.use('/orders', orderRoutes);
+app.use('/watchlist', watchlistRoutes);
 app.use('/user', userRoutes);
 
 // error handling
 app.use((req, res, next) => {
-    const error = new Error('Not found');
+    const error = new Error('Page Not found');
     error.status = 404;
     next(error);
 });

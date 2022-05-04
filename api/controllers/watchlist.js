@@ -1,23 +1,22 @@
-const Order = require('../models/order');
-const Product = require('../models/movie');
+const Watchlist = require('../models/watchlist');
+const Movie = require('../models/movie');
 const mongoose = require('mongoose');
 
-exports.ordersGetAll = (req, res, next) => {
-    Order.find()
-    .select('product quantity _id')
-    .populate('product', 'name')
+exports.watchlistGetAll = (req, res, next) => {
+    Watchlist.find()
+    .select('movie _id')
+    .populate('movie', 'name')
     .exec()
     .then(docs => {
         res.status(200).json({
             count: docs.length,
-            orders: docs.map(doc => {
+            watchlist: docs.map(doc => {
                 return {
                     _id: doc._id,
-                    product: doc.product,
-                    quantity: doc.quantity,
+                    movie: doc.movie,
                     request: {
                         type: 'GET',
-                        url: 'http://localhost:3000/orders/' + doc._id
+                        url: 'http://localhost:3000/movies/' + doc._id
                     }
                 };
             })
@@ -31,33 +30,32 @@ exports.ordersGetAll = (req, res, next) => {
     });
 }
 
-exports.ordersCreateOrder = (req, res, next) => {
-    Product.findById(req.body.productId)
-      .then(product => {
-        if (!product) {
+exports.watchlistCreateNew=(req, res, next) => {
+    Movie.findById(req.body.movieId)
+      .then(movie => {
+        if (!movie) {
           return res.status(404).json({
-            message: "Product not found"
+            message: "Movie not found"
           });
         }
-        const order = new Order({
+      });
+      const watchlist = new Watchlist({
           _id: mongoose.Types.ObjectId(),
-          quantity: req.body.quantity,
-          product: req.body.productId
-        });
-        return order.save();
-      })
+          movie: req.body.movieId,
+          userId: req.body.userId
+      });
+      watchlist.save()
       .then(result => {
         console.log(result);
         res.status(201).json({
-          message: "Order stored",
-          createdOrder: {
+          message: "Added to watch list",
+          createdItem: {
             _id: result._id,
-            product: result.product,
-            quantity: result.quantity
+            movie: result.movie
           },
           request: {
             type: "GET",
-            url: "http://localhost:3000/orders/" + result._id
+            url: "http://localhost:3000/movies/" + result._id
           }
         });
       })
@@ -69,21 +67,21 @@ exports.ordersCreateOrder = (req, res, next) => {
       });
   }
 
-exports.ordersGetOrder = (req, res, next) => {
-    Order.findById(req.params.orderId)
-    .populate('product')
+exports.watchlistGetItem = (req, res, next) => {
+    Watchlist.findById(req.params.watchlistId)
+    .populate('movie')
     .exec()
-    .then(order => {
-        if(!order) {
+    .then(watchlist => {
+        if(!watchlist) {
             return res.status(404).json({
-                message: 'order not found'
+                message: 'item not found'
             });
         }
         res.status(200).json({
-            order: order,
+            watchlist: watchlist,
             request: {
                 type: 'GET',
-                url: 'http://localhost:3000/orders'
+                url: 'http://localhost:3000/watchlist'
             }
         });
     })
@@ -94,12 +92,12 @@ exports.ordersGetOrder = (req, res, next) => {
     });
 }
 
-exports.ordersDelete = (req, res, next) => {
-    Order.remove({_id: req.params.orderId})
+exports.watchlistDelete = (req, res, next) => {
+    Watchlist.remove({_id: req.params.watchlistId})
     .exec()
     .then(result => {
         res.status(200).json({
-            message: 'order deleted'
+            message: 'item deleted from watchlist'
         });
     })
     .catch(err => {

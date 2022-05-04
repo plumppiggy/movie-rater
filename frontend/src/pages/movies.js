@@ -24,6 +24,7 @@ class MoviesPage extends Component {
         super(props);
         this.nameElRef = React.createRef();
         this.ratingElRef = React.createRef();
+        this.descriptionElRef = React.createRef();
 
     }
 
@@ -40,18 +41,20 @@ class MoviesPage extends Component {
         this.setState({creating: false});
         const name = this.nameElRef.current.value;
         const rating = this.ratingElRef.current.value;
+        const description = this.descriptionElRef.current.value;
 
-        if (name.trim().length === 0 || rating.trim().length === 0) {
+        if (name.trim().length === 0 || rating.trim().length === 0 || description.trim().length === 0) {
             return;
         }
         
-        const event = {name, rating};
+        const event = {name, rating, description};
         console.log(event);
 
         const requestBody = {
             name: name,
             rating: rating,
-            userId: this.context.userId
+            userId: this.context.userId,
+            description: description
         };
 
 
@@ -66,7 +69,7 @@ class MoviesPage extends Component {
             }
         })
         .then( res => {
-            if (res.status != 200 && res.status != 201) {
+            if (res.status !== 200 && res.status !== 201) {
                 throw new Error('fail');
             }
             return res.json();
@@ -79,7 +82,8 @@ class MoviesPage extends Component {
                     _id: resData._id,
                     name: resData.name,
                     creatorId: this.context.userId,
-                    rating: resData.rating
+                    rating: resData.rating,
+                    description: resData.description
                 });
                 return {movies: updatedMovies};
             });
@@ -106,7 +110,7 @@ class MoviesPage extends Component {
             }
         })
         .then( res => {
-            if (res.status != 200 && res.status != 201) {
+            if (res.status !== 200 && res.status !== 201) {
                 throw new Error('fail');
             }
             return res.json();
@@ -152,6 +156,10 @@ class MoviesPage extends Component {
                         <label htmlFor='rating'>Rating</label>
                         <input type="number" id='rating' ref={this.ratingElRef}></input>
                     </div>
+                    <div className='form-control'>
+                        <label htmlFor='description'>Description</label>
+                        <input type="text" id='description' ref={this.descriptionElRef}></input>
+                    </div>
                 </form>
             </Modal>}
             {this.state.selectedMovie && 
@@ -159,6 +167,7 @@ class MoviesPage extends Component {
             canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}
             confirmText="Holder">
                 <h1>{this.state.selectedMovie.name}</h1>
+                <p>{this.state.selectedMovie.description}</p>
             </Modal>}
             {this.context.token && (
             <div className='movies-control'>
