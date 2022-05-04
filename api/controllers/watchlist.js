@@ -90,12 +90,14 @@ exports.watchlistGetItem = (req, res, next) => {
 }
 
 exports.watchlistDelete = (req, res, next) => {
-    Watchlist.remove({_id: req.params.watchlistId})
+    Watchlist.remove({_id: req.params.watchlistId, userId : req.body.userId})
     .exec()
     .then(result => {
+        console.log(result);
         res.status(200).json({
             message: 'item deleted from watchlist'
         });
+        
     })
     .catch(err => {
         res.status(500).json({
