@@ -26,6 +26,7 @@ const mainNav = props => (
 						)}
 						<li>
 							<NavLink to="/movies">Movies</NavLink>
+							<NavLink to="/watchlist">Watchlist</NavLink>
 						</li>
     				</ul>
     			</nav>

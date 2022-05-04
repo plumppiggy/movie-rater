@@ -51,12 +51,13 @@ exports.watchlistCreateNew=(req, res, next) => {
           message: "Added to watch list",
           createdItem: {
             _id: result._id,
-            movie: result.movie
-          },
-          request: {
-            type: "GET",
-            url: "http://localhost:3000/movies/" + result._id
+            movie: result.movie,
+            userId: result.userId
           }
+        //   request: {
+        //     type: "GET",
+        //     url: "http://localhost:3000/movies/" + result._id
+        //   }
         });
       })
       .catch(err => {
@@ -68,7 +69,7 @@ exports.watchlistCreateNew=(req, res, next) => {
   }
 
 exports.watchlistGetItem = (req, res, next) => {
-    Watchlist.findById(req.params.watchlistId)
+    Watchlist.find({creatorId : req.params.wathclistId})
     .populate('movie')
     .exec()
     .then(watchlist => {
@@ -79,10 +80,6 @@ exports.watchlistGetItem = (req, res, next) => {
         }
         res.status(200).json({
             watchlist: watchlist,
-            request: {
-                type: 'GET',
-                url: 'http://localhost:3000/watchlist'
-            }
         });
     })
     .catch(err => {

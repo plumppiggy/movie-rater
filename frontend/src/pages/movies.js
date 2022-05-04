@@ -10,6 +10,8 @@ import authContext from '../context/auth-context';
 
 class MoviesPage extends Component {
 
+    isActive = true;
+
     state = {
         creating: false,
         movies: [],
@@ -118,13 +120,16 @@ class MoviesPage extends Component {
         .then(resData => {
             console.log(resData);
             const movies = resData.movies;
-            this.setState({movies: movies});
+            if (this.isActive) {
+                this.setState({movies: movies, isLoading : false});
+            }
             console.log(movies);
-            this.setState({isLoading: false});
         })
         .catch(err => {
             console.log(err);
-            this.setState({isLoading: false});
+            if (this.isActive) {
+                this.setState({isLoading: false});
+            }
         });
     }
 
@@ -137,6 +142,46 @@ class MoviesPage extends Component {
 
     }
 
+    addToWatchlist = () => {
+        if (!this.context.token) {
+            this.setState({selectedMovie : null});
+            return;
+        }
+        const token = this.context.token;
+        console.log(this.state.selectedMovie);
+        const requestBody = {
+            movieId: this.state.selectedMovie._id,
+            userId : this.context.userId
+        };
+        fetch('http://localhost:8000/watchlist/', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer ' + token
+            }
+        })
+        .then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                throw new Error('fail');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            console.log(resData);
+            this.setState({selectedMovie:null});
+            
+            
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+
+    componentWillUnmount() {
+        this.isActive = false;
+    }
+
     render () {
 
         
@@ -146,7 +191,7 @@ class MoviesPage extends Component {
             {this.state.creating && 
             <Modal title="Add Movie" 
             canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}
-            confirmText="Confirm">
+            confirmText={this.context.token ? 'Book' : 'Confirm'}>
                 <form>
                     <div className='form-control'>
                         <label htmlFor='name'>Name</label>
@@ -164,8 +209,8 @@ class MoviesPage extends Component {
             </Modal>}
             {this.state.selectedMovie && 
             <Modal title="Movie" 
-            canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler}
-            confirmText="Holder">
+            canCancel canConfirm onCancel={this.modalCancelHandler} onConfirm={this.addToWatchlist}
+            confirmText="Add to watchlist">
                 <h1>{this.state.selectedMovie.name}</h1>
                 <p>{this.state.selectedMovie.description}</p>
             </Modal>}

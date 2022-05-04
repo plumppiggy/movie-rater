@@ -6,6 +6,7 @@ import MainNav from './components/navigation/mainnav';
 import Auth from './pages/auth';
 import Movies from './pages/movies';
 import AuthContext from './context/auth-context';
+import Watchlist from './pages/watchlist';
 
 class App extends Component {
   state = {
@@ -35,6 +36,7 @@ class App extends Component {
       <Routes>
         {this.state.token && <Route path="/" element={<Navigate replace to="/movies" />}></Route>}
         <Route path="/movies" element={<Movies />} />
+        <Route path="/watchlist" element={<Watchlist />} />
         <Route path="/auth" element={<Auth />} />
         </Routes>
       </main>
