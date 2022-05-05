@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './auth.css';
 import AuthContext from '../context/auth-context';
+import { browserHistory } from 'react-router-dom';
 
 class AuthPage extends Component {
     state = {
@@ -57,6 +58,7 @@ class AuthPage extends Component {
             if (this.state.isLogin) {
                 this.context.login(resData.token, resData.userId);
             }
+            
         })
         .catch(err => {
             console.log(err);

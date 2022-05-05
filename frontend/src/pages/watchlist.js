@@ -44,7 +44,6 @@ class WatchlistPage extends Component {
 
 componentDidMount() {
 	this.fetchMovies();
-	
 }
 
 deleteWatchlistHandler = watchlistId => {
@@ -76,7 +75,6 @@ deleteWatchlistHandler = watchlistId => {
 				return movie._id !== watchlistId;
 			});
 			return { movies : newMovies, isLoading: false};
-
 		})
 	})
 	.catch(err => {

@@ -5,7 +5,6 @@ import Modal from '../components/Modal/modal';
 import Backdrop from '../components/Backdrop/backdrop';
 import AuthContext from '../context/auth-context';
 import MovieList from '../components/Movies/MovieList/MovieList';
-import authContext from '../context/auth-context';
 
 
 class MoviesPage extends Component {
