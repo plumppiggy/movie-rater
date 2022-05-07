@@ -97,9 +97,7 @@ class MoviesPage extends Component {
     };
 
     modalCancelHandler = () => {
-        this.setState({creating: false});
-        
-
+        this.setState({creating: false, selectedMovie : null});
     };
 
     fetchMovies () {
